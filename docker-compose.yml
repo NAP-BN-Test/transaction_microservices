@@ -1,0 +1,53 @@
+services:
+  # Golang Order Service
+  order-service:
+    build: ./order-service
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=orders
+      - REDIS_URL=redis:6379
+    depends_on:
+      - postgres
+      - redis
+
+  # Node.js Sales Service
+  sales-service:
+    build: ./sales-service
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=sales
+      - REDIS_URL=redis:6379
+    depends_on:
+      - postgres
+      - redis
+
+  # PostgreSQL Database
+  postgres:
+    image: public.ecr.aws/docker/library/postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # Redis for message queue
+  redis:
+    image: public.ecr.aws/docker/library/redis:alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
