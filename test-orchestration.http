@@ -1,0 +1,70 @@
+### Test Orchestration Pattern
+
+### 1. Create Order via Orchestration - Success Case
+POST http://localhost:8081/orchestrate/order
+Content-Type: application/json
+
+{
+  "customer_id": 1,
+  "items": [
+    {"product_id": 1, "quantity": 2},
+    {"product_id": 2, "quantity": 1}
+  ],
+  "voucher_code": "SAVE10"
+}
+
+### 2. Check Workflow Status
+GET http://localhost:8081/orchestrate/{{workflow_id}}
+
+### 3. Create Order via Orchestration - Failure Case
+POST http://localhost:8081/orchestrate/order
+Content-Type: application/json
+
+{
+  "customer_id": 1,
+  "items": [
+    {"product_id": 999, "quantity": 1}
+  ]
+}
+
+### 4. Check Failed Workflow Status
+GET http://localhost:8081/orchestrate/{{failed_workflow_id}}
+
+### 5. Manual Compensation
+POST http://localhost:8081/orchestrate/{{failed_workflow_id}}/compensate
+
+### 6. Create Order with Large Quantity (Stock Failure)
+POST http://localhost:8081/orchestrate/order
+Content-Type: application/json
+
+{
+  "customer_id": 1,
+  "items": [
+    {"product_id": 1, "quantity": 1000}
+  ]
+}
+
+### 7. Create Order without Voucher
+POST http://localhost:8081/orchestrate/order
+Content-Type: application/json
+
+{
+  "customer_id": 2,
+  "items": [
+    {"product_id": 1, "quantity": 1}
+  ]
+}
+
+### 8. Test Multiple Items Order
+POST http://localhost:8081/orchestrate/order
+Content-Type: application/json
+
+{
+  "customer_id": 3,
+  "items": [
+    {"product_id": 1, "quantity": 1},
+    {"product_id": 2, "quantity": 2},
+    {"product_id": 3, "quantity": 1}
+  ],
+  "voucher_code": "SAVE20"
+}

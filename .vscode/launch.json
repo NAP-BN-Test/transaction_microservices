@@ -1,0 +1,48 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Sales Service",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/sales-service/index.js",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "restart": true,
+      "runtimeExecutable": "node",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Debug Order Service",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/order-service/main.go",
+      "env": {},
+      "args": [],
+      "showLog": true
+    },
+    {
+      "name": "Debug Orchestrator Service",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/orchestrator-service/main.go",
+      "env": {},
+      "args": [],
+      "showLog": true
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug Both Services",
+      "configurations": ["Debug Sales Service", "Debug Order Service"]
+    },
+    {
+      "name": "Debug All Services",
+      "configurations": ["Debug Sales Service", "Debug Order Service", "Debug Orchestrator Service"]
+    }
+  ]
+}
